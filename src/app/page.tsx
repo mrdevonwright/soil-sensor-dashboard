@@ -69,6 +69,12 @@ export default async function DashboardPage() {
               >
                 Config
               </Link>
+              <Link
+                href="/api-docs"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                API
+              </Link>
             </nav>
           </div>
         </div>
