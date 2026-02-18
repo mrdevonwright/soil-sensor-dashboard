@@ -71,10 +71,13 @@ export function DepthProfileChart({ data, type }: DepthProfileChartProps) {
         <XAxis type="number" unit={getUnit()} />
         <YAxis type="category" dataKey="depth" width={50} />
         <Tooltip
-          formatter={(value: number) => [
-            `${formatValue(value)}${getUnit()}`,
-            type.charAt(0).toUpperCase() + type.slice(1),
-          ]}
+          formatter={(value) => {
+            const numValue = typeof value === "number" ? value : 0;
+            return [
+              `${formatValue(numValue)}${getUnit()}`,
+              type.charAt(0).toUpperCase() + type.slice(1),
+            ];
+          }}
         />
         <Bar dataKey="value" radius={[0, 4, 4, 0]}>
           {chartData.map((entry, index) => (
