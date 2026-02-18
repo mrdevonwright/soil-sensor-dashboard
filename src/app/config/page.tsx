@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { DeviceConfig } from "@/lib/types";
+import { ConfigEditForm } from "@/components/ConfigEditForm";
 
 async function getConfigs() {
   const supabase = await createClient();
@@ -57,52 +58,42 @@ export default async function ConfigPage() {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Global Config */}
         <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Global Default Configuration
-          </h2>
-          <p className="text-gray-500 mb-4">
-            These settings apply to all devices unless overridden by a device-specific config.
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Global Default Configuration
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">
+                These settings apply to all devices unless overridden by a device-specific config.
+              </p>
+            </div>
+            {globalConfig && (
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                v{globalConfig.config_version}
+              </span>
+            )}
+          </div>
 
           {globalConfig ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-500">Collection Interval</p>
-                <p className="text-xl font-semibold">
-                  {globalConfig.collection_interval_min} min
-                </p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-500">Deep Sleep</p>
-                <p className="text-xl font-semibold">
-                  {globalConfig.deep_sleep_enabled ? "Enabled" : "Disabled"}
-                </p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-500">NTP Sync Interval</p>
-                <p className="text-xl font-semibold">
-                  {globalConfig.ntp_sync_interval_hours} hours
-                </p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-500">Config Version</p>
-                <p className="text-xl font-semibold">
-                  {globalConfig.config_version}
-                </p>
-              </div>
-            </div>
+            <ConfigEditForm config={globalConfig} isGlobal />
           ) : (
             <p className="text-gray-500">
               No global config found. Run the SQL migration to create one.
             </p>
           )}
+        </div>
 
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
-              <strong>To update:</strong> Edit the device_configs table in Supabase where device_id is NULL.
-              Increment config_version to push changes to devices.
-            </p>
-          </div>
+        {/* How it works */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-8 border border-blue-100">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+            How Config Sync Works
+          </h3>
+          <ol className="list-decimal list-inside space-y-2 text-blue-800">
+            <li>Edit the configuration above and click &quot;Save &amp; Push to Devices&quot;</li>
+            <li>Config version increments automatically</li>
+            <li>On next wake cycle, device checks its config version against the server</li>
+            <li>If server version is higher, device downloads and applies new settings</li>
+          </ol>
         </div>
 
         {/* Device-Specific Configs */}
@@ -111,36 +102,36 @@ export default async function ConfigPage() {
             <h2 className="text-lg font-semibold text-gray-900">
               Device-Specific Overrides
             </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Override global settings for specific devices.
+            </p>
           </div>
 
           {deviceConfigs.length === 0 ? (
             <div className="p-6 text-center text-gray-500">
               <p>No device-specific configurations.</p>
               <p className="text-sm mt-2">
-                Add a row to device_configs with a specific device_id to override global settings.
+                Device-specific configs will appear here when created.
               </p>
             </div>
           ) : (
             <div className="divide-y">
               {deviceConfigs.map((config) => (
-                <div key={config.id} className="px-6 py-4">
-                  <div className="flex items-center justify-between">
+                <div key={config.id} className="p-6">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="font-medium text-gray-900 font-mono">
+                      <p className="font-medium text-gray-900 font-mono text-lg">
                         {config.device_id}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Interval: {config.collection_interval_min} min |
-                        Sleep: {config.deep_sleep_enabled ? "On" : "Off"} |
-                        Test Mode: {config.test_mode_enabled ? "On" : "Off"}
+                        Device-specific override
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-900">
-                        Version: {config.config_version}
-                      </p>
-                    </div>
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                      v{config.config_version}
+                    </span>
                   </div>
+                  <ConfigEditForm config={config} />
                 </div>
               ))}
             </div>
