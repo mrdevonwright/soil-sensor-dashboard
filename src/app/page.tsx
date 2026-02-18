@@ -1,63 +1,169 @@
-import Image from "next/image";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { formatRelativeTime, getStatusColor, getRssiQuality } from "@/lib/utils";
+import type { Device, SensorReading } from "@/lib/types";
 
-export default function Home() {
+async function getDevices() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("devices")
+    .select("*")
+    .order("last_seen_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching devices:", error);
+    return [];
+  }
+  return data as Device[];
+}
+
+async function getRecentReadings() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("sensor_readings")
+    .select("*")
+    .order("timestamp", { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.error("Error fetching readings:", error);
+    return [];
+  }
+  return data as SensorReading[];
+}
+
+export default async function DashboardPage() {
+  const [devices, recentReadings] = await Promise.all([
+    getDevices(),
+    getRecentReadings(),
+  ]);
+
+  const onlineCount = devices.filter((d) => d.status === "online").length;
+  const totalReadings = recentReadings.length;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Soil Sensor Dashboard
+            </h1>
+            <nav className="flex gap-4">
+              <Link
+                href="/"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                Devices
+              </Link>
+              <Link
+                href="/firmware"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                Firmware
+              </Link>
+              <Link
+                href="/config"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                Config
+              </Link>
+            </nav>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Total Devices</h3>
+            <p className="text-3xl font-bold text-gray-900">{devices.length}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Online</h3>
+            <p className="text-3xl font-bold text-green-600">{onlineCount}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">
+              Recent Readings
+            </h3>
+            <p className="text-3xl font-bold text-blue-600">{totalReadings}</p>
+          </div>
+        </div>
+
+        {/* Device List */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-900">Devices</h2>
+          </div>
+
+          {devices.length === 0 ? (
+            <div className="p-6 text-center text-gray-500">
+              <p>No devices registered yet.</p>
+              <p className="text-sm mt-2">
+                Devices will appear here once they connect to the backend.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y">
+              {devices.map((device) => (
+                <Link
+                  key={device.id}
+                  href={`/devices/${device.device_id}`}
+                  className="block hover:bg-gray-50"
+                >
+                  <div className="px-6 py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-3 h-3 rounded-full ${getStatusColor(
+                            device.status
+                          )}`}
+                        />
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {device.device_name || device.device_id}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {device.farm_id} / {device.block_id}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-900">
+                          {device.firmware_version || "Unknown"}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {device.last_seen_at
+                            ? formatRelativeTime(device.last_seen_at)
+                            : "Never"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex gap-4 text-xs text-gray-500">
+                      <span>
+                        Signal: {device.wifi_rssi ? `${device.wifi_rssi} dBm` : "N/A"}{" "}
+                        ({getRssiQuality(device.wifi_rssi)})
+                      </span>
+                      <span>
+                        Success rate:{" "}
+                        {device.successful_uploads + device.failed_uploads > 0
+                          ? `${(
+                              (device.successful_uploads /
+                                (device.successful_uploads +
+                                  device.failed_uploads)) *
+                              100
+                            ).toFixed(0)}%`
+                          : "N/A"}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
