@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatRelativeTime, getStatusColor, getRssiQuality } from "@/lib/utils";
 import type { Device, SensorReading } from "@/lib/types";
 import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
+import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
 
 interface Props {
   params: Promise<{ deviceId: string }>;
@@ -166,26 +167,11 @@ export default async function DeviceDetailPage({ params }: Props) {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Latest Reading
             </h2>
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-600">Avg Moisture</p>
-                <p className="text-2xl font-bold text-blue-700">
-                  {latestReading.soil_moisture.toFixed(1)}%
-                </p>
-              </div>
-              <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <p className="text-sm text-orange-600">Avg Temperature</p>
-                <p className="text-2xl font-bold text-orange-700">
-                  {latestReading.soil_temperature.toFixed(1)}°C
-                </p>
-              </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <p className="text-sm text-green-600">Avg Salinity</p>
-                <p className="text-2xl font-bold text-green-700">
-                  {latestReading.electrical_conductivity.toFixed(3)} dS/m
-                </p>
-              </div>
-            </div>
+            <TimeSeriesSection
+              latestReading={latestReading}
+              initialHistory={history}
+              deviceId={device.device_id}
+            />
 
             {/* Depth Profile Charts */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
