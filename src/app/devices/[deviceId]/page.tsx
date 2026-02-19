@@ -209,20 +209,6 @@ export default async function DeviceDetailPage({ params }: Props) {
             No sensor readings available for this device yet.
           </div>
         )}
-
-        {/* Reading History Summary */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            24-Hour History
-          </h2>
-          {history.length > 0 ? (
-            <p className="text-gray-600">
-              {history.length} readings in the last 24 hours
-            </p>
-          ) : (
-            <p className="text-gray-500">No readings in the last 24 hours</p>
-          )}
-        </div>
       </main>
     </div>
   );
