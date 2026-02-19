@@ -6,12 +6,16 @@ import type { SensorReading } from "@/lib/types";
 import { SensorMetricPanel, type MetricType } from "./SensorMetricPanel";
 import { TimeSeriesChart } from "./TimeSeriesChart";
 import { TimeRangeSelector, type TimeRange, getHoursForRange } from "./TimeRangeSelector";
+import { DepthLevelSelector } from "./DepthLevelSelector";
 
 interface TimeSeriesSectionProps {
   latestReading: SensorReading;
   initialHistory: SensorReading[];
   deviceId: string;
 }
+
+// Default to all levels selected
+const ALL_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 export function TimeSeriesSection({
   latestReading,
@@ -22,6 +26,7 @@ export function TimeSeriesSection({
   const [timeRange, setTimeRange] = useState<TimeRange>("24h");
   const [historyData, setHistoryData] = useState<SensorReading[]>(initialHistory);
   const [loading, setLoading] = useState(false);
+  const [selectedLevels, setSelectedLevels] = useState<number[]>(ALL_LEVELS);
 
   const fetchHistory = useCallback(async (hours: number) => {
     setLoading(true);
@@ -41,14 +46,12 @@ export function TimeSeriesSection({
   }, [deviceId]);
 
   useEffect(() => {
-    // Only fetch if we need more data than initial 24h
-    const hours = getHoursForRange(timeRange);
-    if (hours !== 24) {
+    // Fetch data whenever time range changes or metric is selected
+    if (selectedMetric) {
+      const hours = getHoursForRange(timeRange);
       fetchHistory(hours);
-    } else {
-      setHistoryData(initialHistory);
     }
-  }, [timeRange, initialHistory, fetchHistory]);
+  }, [timeRange, selectedMetric, fetchHistory]);
 
   const handlePanelClick = (metric: MetricType) => {
     if (selectedMetric === metric) {
@@ -89,7 +92,7 @@ export function TimeSeriesSection({
       {/* Time Series Chart (expanded when metric selected) */}
       {selectedMetric && (
         <div className="bg-gray-50 rounded-lg p-4 mb-6 animate-in slide-in-from-top-2 duration-200">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
             <h3 className="text-lg font-medium text-gray-900">
               {selectedMetric === "moisture" && "Moisture History"}
               {selectedMetric === "temperature" && "Temperature History"}
@@ -106,12 +109,25 @@ export function TimeSeriesSection({
               </button>
             </div>
           </div>
+
+          {/* Depth Level Selector */}
+          <div className="mb-4">
+            <DepthLevelSelector
+              selectedLevels={selectedLevels}
+              onChange={setSelectedLevels}
+            />
+          </div>
+
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
             </div>
           ) : (
-            <TimeSeriesChart data={historyData} metric={selectedMetric} />
+            <TimeSeriesChart
+              data={historyData}
+              metric={selectedMetric}
+              selectedLevels={selectedLevels}
+            />
           )}
         </div>
       )}
