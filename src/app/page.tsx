@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { formatRelativeTime, getStatusColor, getRssiQuality } from "@/lib/utils";
+import { formatRelativeTime, getStatusColor, getRssiQuality, getMeshRoleInfo } from "@/lib/utils";
 import type { Device, SensorReading } from "@/lib/types";
 
 async function getDevices() {
@@ -39,6 +39,8 @@ export default async function DashboardPage() {
   ]);
 
   const onlineCount = devices.filter((d) => d.status === "online").length;
+  const gatewayCount = devices.filter((d) => d.mesh_role === "gateway").length;
+  const relayCount = devices.filter((d) => d.mesh_role === "relay").length;
   const totalReadings = recentReadings.length;
 
   return (
@@ -82,20 +84,26 @@ export default async function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Total Devices</h3>
-            <p className="text-3xl font-bold text-gray-900">{devices.length}</p>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <div className="bg-white rounded-lg shadow p-4">
+            <h3 className="text-xs font-medium text-gray-500">Total Devices</h3>
+            <p className="text-2xl font-bold text-gray-900">{devices.length}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Online</h3>
-            <p className="text-3xl font-bold text-green-600">{onlineCount}</p>
+          <div className="bg-white rounded-lg shadow p-4">
+            <h3 className="text-xs font-medium text-gray-500">Online</h3>
+            <p className="text-2xl font-bold text-green-600">{onlineCount}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">
-              Recent Readings
-            </h3>
-            <p className="text-3xl font-bold text-blue-600">{totalReadings}</p>
+          <div className="bg-white rounded-lg shadow p-4">
+            <h3 className="text-xs font-medium text-gray-500">Gateways</h3>
+            <p className="text-2xl font-bold text-emerald-600">{gatewayCount}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4">
+            <h3 className="text-xs font-medium text-gray-500">Relays</h3>
+            <p className="text-2xl font-bold text-amber-600">{relayCount}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4">
+            <h3 className="text-xs font-medium text-gray-500">Recent Readings</h3>
+            <p className="text-2xl font-bold text-blue-600">{totalReadings}</p>
           </div>
         </div>
 
@@ -148,14 +156,26 @@ export default async function DashboardPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-2 flex gap-4 text-xs text-gray-500">
+                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
+                      {device.mesh_role && (
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getMeshRoleInfo(device.mesh_role).color}`}>
+                          {getMeshRoleInfo(device.mesh_role).label}
+                          {device.mesh_hop_count !== null && device.mesh_hop_count > 0 && (
+                            <span className="ml-1">({device.mesh_hop_count} hop{device.mesh_hop_count > 1 ? "s" : ""})</span>
+                          )}
+                        </span>
+                      )}
+                      {device.mesh_role === "relay" && device.mesh_parent_device && (
+                        <span className="text-gray-400">
+                          via {device.mesh_parent_device.slice(-8)}
+                        </span>
+                      )}
                       <span>
                         Signal: {device.wifi_rssi ? `${device.wifi_rssi} dBm` : "N/A"}{" "}
                         ({getRssiQuality(device.wifi_rssi)})
                       </span>
                       <span>
-                        Success rate:{" "}
-                        {device.successful_uploads + device.failed_uploads > 0
+                        Success: {device.successful_uploads + device.failed_uploads > 0
                           ? `${(
                               (device.successful_uploads /
                                 (device.successful_uploads +

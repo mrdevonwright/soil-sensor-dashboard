@@ -20,6 +20,10 @@ export interface Device {
   failed_uploads: number;
   registered_at: string;
   updated_at: string;
+  // Mesh networking status
+  mesh_role: "gateway" | "relay" | "direct" | null;
+  mesh_parent_device: string | null;
+  mesh_hop_count: number | null;
 }
 
 export interface SensorReading {

@@ -61,3 +61,16 @@ export function getRssiQuality(rssi: number | null) {
   if (rssi >= -70) return "Fair";
   return "Poor";
 }
+
+export function getMeshRoleInfo(role: string | null) {
+  switch (role) {
+    case "gateway":
+      return { label: "Gateway", color: "bg-emerald-100 text-emerald-800", icon: "wifi" };
+    case "relay":
+      return { label: "Relay", color: "bg-amber-100 text-amber-800", icon: "repeat" };
+    case "direct":
+      return { label: "Direct", color: "bg-blue-100 text-blue-800", icon: "wifi" };
+    default:
+      return { label: "Unknown", color: "bg-gray-100 text-gray-600", icon: "help" };
+  }
+}
