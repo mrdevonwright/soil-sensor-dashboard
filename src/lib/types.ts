@@ -4,6 +4,7 @@ export interface Device {
   id: string;
   device_id: string;
   device_name: string | null;
+  device_type: "soil_sensor" | "camera";
   farm_id: string | null;
   block_id: string | null;
   sub_block_id: string | null;
@@ -13,6 +14,7 @@ export interface Device {
   last_seen_at: string | null;
   last_reading_at: string | null;
   last_config_sync_at: string | null;
+  last_capture_at: string | null;
   wifi_rssi: number | null;
   battery_voltage: number | null;
   boot_count: number;
@@ -24,6 +26,17 @@ export interface Device {
   mesh_role: "gateway" | "relay" | "direct" | null;
   mesh_parent_device: string | null;
   mesh_hop_count: number | null;
+}
+
+export interface CameraImage {
+  id: string;
+  device_id: string;
+  captured_at: string;
+  storage_path: string;
+  file_size_bytes: number | null;
+  width: number | null;
+  height: number | null;
+  created_at: string;
 }
 
 export interface SensorReading {

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { formatRelativeTime, getStatusColor, getRssiQuality } from "@/lib/utils";
-import type { Device, SensorReading } from "@/lib/types";
+import { formatRelativeTime, getStatusColor, getRssiQuality, getDeviceTypeInfo, getEffectiveStatus } from "@/lib/utils";
+import type { Device, SensorReading, CameraImage } from "@/lib/types";
 import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
 import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
+import { CameraGallery } from "@/components/CameraGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -61,16 +62,50 @@ async function getReadingHistory(deviceId: string, hours: number = 24) {
   return data as SensorReading[];
 }
 
+async function getCameraImages(deviceId: string, hours: number = 24) {
+  const supabase = await createClient();
+  const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
+  const { data, error, count } = await supabase
+    .from("camera_images")
+    .select("*", { count: "exact" })
+    .eq("device_id", decodeURIComponent(deviceId))
+    .gte("captured_at", since)
+    .order("captured_at", { ascending: false })
+    .limit(200);
+
+  if (error) {
+    console.error("Error fetching camera images:", error);
+    return { images: [], total: 0 };
+  }
+  return { images: data as CameraImage[], total: count ?? 0 };
+}
+
 export default async function DeviceDetailPage({ params }: Props) {
   const { deviceId } = await params;
-  const [device, latestReading, history] = await Promise.all([
-    getDevice(deviceId),
-    getLatestReading(deviceId),
-    getReadingHistory(deviceId),
-  ]);
+  const device = await getDevice(deviceId);
 
   if (!device) {
     notFound();
+  }
+
+  const isCamera = device.device_type === "camera";
+  const deviceTypeInfo = getDeviceTypeInfo(device.device_type);
+
+  // Fetch device-type-specific data
+  let latestReading: SensorReading | null = null;
+  let history: SensorReading[] = [];
+  let cameraImages: CameraImage[] = [];
+  let cameraImageTotal = 0;
+
+  if (isCamera) {
+    const result = await getCameraImages(deviceId);
+    cameraImages = result.images;
+    cameraImageTotal = result.total;
+  } else {
+    [latestReading, history] = await Promise.all([
+      getLatestReading(deviceId),
+      getReadingHistory(deviceId),
+    ]);
   }
 
   return (
@@ -89,8 +124,11 @@ export default async function DeviceDetailPage({ params }: Props) {
               <h1 className="text-2xl font-bold text-gray-900">
                 {device.device_name || device.device_id}
               </h1>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${deviceTypeInfo.color}`}>
+                {deviceTypeInfo.label}
+              </span>
               <div
-                className={`w-3 h-3 rounded-full ${getStatusColor(device.status)}`}
+                className={`w-3 h-3 rounded-full ${getStatusColor(getEffectiveStatus(device.last_seen_at))}`}
               />
             </div>
           </div>
@@ -124,19 +162,29 @@ export default async function DeviceDetailPage({ params }: Props) {
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Success Rate</h3>
-            <p className="text-xl font-semibold text-gray-900">
-              {device.successful_uploads + device.failed_uploads > 0
-                ? `${(
-                    (device.successful_uploads /
-                      (device.successful_uploads + device.failed_uploads)) *
-                    100
-                  ).toFixed(1)}%`
-                : "N/A"}
-            </p>
-            <p className="text-sm text-gray-500">
-              {device.successful_uploads} / {device.successful_uploads + device.failed_uploads} uploads
-            </p>
+            <h3 className="text-sm font-medium text-gray-500">
+              {isCamera ? "Images Captured" : "Success Rate"}
+            </h3>
+            {isCamera ? (
+              <p className="text-xl font-semibold text-gray-900">
+                {cameraImageTotal}
+              </p>
+            ) : (
+              <>
+                <p className="text-xl font-semibold text-gray-900">
+                  {device.successful_uploads + device.failed_uploads > 0
+                    ? `${(
+                        (device.successful_uploads /
+                          (device.successful_uploads + device.failed_uploads)) *
+                        100
+                      ).toFixed(1)}%`
+                    : "N/A"}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {device.successful_uploads} / {device.successful_uploads + device.failed_uploads} uploads
+                </p>
+              </>
+            )}
           </div>
         </div>
 
@@ -163,8 +211,19 @@ export default async function DeviceDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Latest Reading */}
-        {latestReading ? (
+        {/* Device-type-specific content */}
+        {isCamera ? (
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Camera Images
+            </h2>
+            <CameraGallery
+              deviceId={device.device_id}
+              initialImages={cameraImages}
+              initialTotal={cameraImageTotal}
+            />
+          </div>
+        ) : latestReading ? (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Latest Reading

@@ -54,6 +54,21 @@ export function getStatusColor(status: string) {
   }
 }
 
+/**
+ * Derive effective device status from last_seen_at timestamp.
+ * - <1hr ago: online (green)
+ * - 1-3hrs ago: offline (gray)
+ * - >3hrs or never: error/unreachable (red)
+ */
+export function getEffectiveStatus(lastSeenAt: string | null): "online" | "offline" | "error" {
+  if (!lastSeenAt) return "error";
+  const diffMs = Date.now() - new Date(lastSeenAt).getTime();
+  const diffHours = diffMs / (1000 * 60 * 60);
+  if (diffHours < 1) return "online";
+  if (diffHours < 3) return "offline";
+  return "error";
+}
+
 export function getRssiQuality(rssi: number | null) {
   if (rssi === null) return "Unknown";
   if (rssi >= -50) return "Excellent";
@@ -73,4 +88,19 @@ export function getMeshRoleInfo(role: string | null) {
     default:
       return { label: "Unknown", color: "bg-gray-100 text-gray-600", icon: "help" };
   }
+}
+
+export function getDeviceTypeInfo(type: string) {
+  switch (type) {
+    case "camera":
+      return { label: "Camera", color: "bg-purple-100 text-purple-800" };
+    case "soil_sensor":
+    default:
+      return { label: "Soil Sensor", color: "bg-cyan-100 text-cyan-800" };
+  }
+}
+
+export function getCameraImageUrl(storagePath: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${supabaseUrl}/storage/v1/object/public/camera-images/${storagePath}`;
 }
