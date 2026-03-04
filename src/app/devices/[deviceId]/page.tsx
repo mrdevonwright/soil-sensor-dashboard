@@ -6,6 +6,8 @@ import type { Device, SensorReading } from "@/lib/types";
 import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
 import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ deviceId: string }>;
 }

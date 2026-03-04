@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { formatRelativeTime, getStatusColor, getRssiQuality, getMeshRoleInfo } from "@/lib/utils";
 import type { Device, SensorReading } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 async function getDevices() {
   const supabase = await createClient();
   const { data, error } = await supabase
