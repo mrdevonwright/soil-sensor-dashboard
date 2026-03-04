@@ -32,9 +32,17 @@ export async function updateCaptureSchedule(
 ) {
   const supabase = await createClient();
 
+  // Get the current effective config version (GREATEST of device + global)
+  // so we can bump PAST it — otherwise the device won't detect a change
+  const { data: effectiveConfig } = await supabase.rpc("get_device_config", {
+    p_device_id: deviceId,
+  });
+  const effectiveVersion = effectiveConfig?.[0]?.config_version ?? 0;
+  const newVersion = effectiveVersion + 1;
+
   const { data: existing } = await supabase
     .from("device_configs")
-    .select("id, config_version")
+    .select("id")
     .eq("device_id", deviceId)
     .single();
 
@@ -43,7 +51,7 @@ export async function updateCaptureSchedule(
       .from("device_configs")
       .update({
         ...schedule,
-        config_version: existing.config_version + 1,
+        config_version: newVersion,
       })
       .eq("id", existing.id);
 
@@ -52,7 +60,7 @@ export async function updateCaptureSchedule(
     const { error } = await supabase.from("device_configs").insert({
       device_id: deviceId,
       ...schedule,
-      config_version: 1,
+      config_version: newVersion,
     });
 
     if (error) return { success: false, error: error.message };
@@ -65,10 +73,16 @@ export async function updateCaptureSchedule(
 export async function triggerCaptureNow(deviceId: string) {
   const supabase = await createClient();
 
-  // Check for existing device-specific config row
+  // Get effective version (GREATEST of device + global) so we bump past it
+  const { data: effectiveConfig } = await supabase.rpc("get_device_config", {
+    p_device_id: deviceId,
+  });
+  const effectiveVersion = effectiveConfig?.[0]?.config_version ?? 0;
+  const newVersion = effectiveVersion + 1;
+
   const { data: existing } = await supabase
     .from("device_configs")
-    .select("id, config_version")
+    .select("id")
     .eq("device_id", deviceId)
     .single();
 
@@ -77,17 +91,16 @@ export async function triggerCaptureNow(deviceId: string) {
       .from("device_configs")
       .update({
         capture_now: true,
-        config_version: existing.config_version + 1,
+        config_version: newVersion,
       })
       .eq("id", existing.id);
 
     if (error) return { success: false, error: error.message };
   } else {
-    // Create device-specific config row with capture_now
     const { error } = await supabase.from("device_configs").insert({
       device_id: deviceId,
       capture_now: true,
-      config_version: 1,
+      config_version: newVersion,
     });
 
     if (error) return { success: false, error: error.message };
