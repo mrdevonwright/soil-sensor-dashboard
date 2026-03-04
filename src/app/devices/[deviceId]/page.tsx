@@ -7,6 +7,7 @@ import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
 import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
 import { CameraGallery } from "@/components/CameraGallery";
 import { CaptureNowButton } from "@/components/CaptureNowButton";
+import { CaptureScheduleEditor } from "@/components/CaptureScheduleEditor";
 import { DeviceTypeSelector } from "@/components/DeviceTypeSelector";
 
 export const dynamic = "force-dynamic";
@@ -64,6 +65,20 @@ async function getReadingHistory(deviceId: string, hours: number = 24) {
   return data as SensorReading[];
 }
 
+async function getDeviceCaptureSchedule(deviceId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_device_config", {
+    p_device_id: decodeURIComponent(deviceId),
+  });
+  const config = data?.[0];
+  return {
+    capture_schedule_type: config?.capture_schedule_type ?? 0,
+    capture_schedule_value: config?.capture_schedule_value ?? 0,
+    capture_window_start: config?.capture_window_start ?? 0,
+    capture_window_end: config?.capture_window_end ?? 24,
+  };
+}
+
 async function getCameraImages(deviceId: string, hours: number = 24) {
   const supabase = await createClient();
   const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
@@ -99,10 +114,16 @@ export default async function DeviceDetailPage({ params }: Props) {
   let cameraImages: CameraImage[] = [];
   let cameraImageTotal = 0;
 
+  let captureSchedule = { capture_schedule_type: 0, capture_schedule_value: 0, capture_window_start: 0, capture_window_end: 24 };
+
   if (isCamera) {
-    const result = await getCameraImages(deviceId);
+    const [result, schedule] = await Promise.all([
+      getCameraImages(deviceId),
+      getDeviceCaptureSchedule(deviceId),
+    ]);
     cameraImages = result.images;
     cameraImageTotal = result.total;
+    captureSchedule = schedule;
   } else {
     [latestReading, history] = await Promise.all([
       getLatestReading(deviceId),
@@ -221,6 +242,15 @@ export default async function DeviceDetailPage({ params }: Props) {
                 Camera Images
               </h2>
               <CaptureNowButton deviceId={device.device_id} />
+            </div>
+            <div className="mb-4">
+              <CaptureScheduleEditor
+                deviceId={device.device_id}
+                initialScheduleType={captureSchedule.capture_schedule_type}
+                initialScheduleValue={captureSchedule.capture_schedule_value}
+                initialWindowStart={captureSchedule.capture_window_start}
+                initialWindowEnd={captureSchedule.capture_window_end}
+              />
             </div>
             <CameraGallery
               deviceId={device.device_id}
