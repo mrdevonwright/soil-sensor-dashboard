@@ -6,6 +6,8 @@ import type { Device, SensorReading, CameraImage } from "@/lib/types";
 import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
 import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
 import { CameraGallery } from "@/components/CameraGallery";
+import { CaptureNowButton } from "@/components/CaptureNowButton";
+import { DeviceTypeSelector } from "@/components/DeviceTypeSelector";
 
 export const dynamic = "force-dynamic";
 
@@ -125,7 +127,7 @@ export default async function DeviceDetailPage({ params }: Props) {
                 {device.device_name || device.device_id}
               </h1>
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${deviceTypeInfo.color}`}>
-                {deviceTypeInfo.label}
+                <DeviceTypeSelector deviceId={device.device_id} currentType={device.device_type} />
               </span>
               <div
                 className={`w-3 h-3 rounded-full ${getStatusColor(getEffectiveStatus(device.last_seen_at))}`}
@@ -214,9 +216,12 @@ export default async function DeviceDetailPage({ params }: Props) {
         {/* Device-type-specific content */}
         {isCamera ? (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Camera Images
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Camera Images
+              </h2>
+              <CaptureNowButton deviceId={device.device_id} />
+            </div>
             <CameraGallery
               deviceId={device.device_id}
               initialImages={cameraImages}

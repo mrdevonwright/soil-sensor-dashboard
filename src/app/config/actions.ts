@@ -13,6 +13,10 @@ export interface UpdateConfigInput {
   sensor_address: string;
   test_mode_enabled: boolean;
   debug_logging_enabled: boolean;
+  capture_schedule_type: number;
+  capture_schedule_value: number;
+  capture_window_start: number;
+  capture_window_end: number;
 }
 
 export async function updateConfig(input: UpdateConfigInput) {
@@ -43,6 +47,10 @@ export async function updateConfig(input: UpdateConfigInput) {
       sensor_address: input.sensor_address,
       test_mode_enabled: input.test_mode_enabled,
       debug_logging_enabled: input.debug_logging_enabled,
+      capture_schedule_type: input.capture_schedule_type,
+      capture_schedule_value: input.capture_schedule_value,
+      capture_window_start: input.capture_window_start,
+      capture_window_end: input.capture_window_end,
       config_version: newVersion,
     })
     .eq("id", input.id);
@@ -68,6 +76,10 @@ export async function createDeviceConfig(deviceId: string) {
     sensor_address: "0",
     test_mode_enabled: false,
     debug_logging_enabled: false,
+    capture_schedule_type: 0,
+    capture_schedule_value: 0,
+    capture_window_start: 0,
+    capture_window_end: 24,
     config_version: 1,
   });
 

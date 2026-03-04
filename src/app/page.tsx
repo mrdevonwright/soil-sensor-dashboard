@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatRelativeTime, getStatusColor, getRssiQuality, getMeshRoleInfo, getDeviceTypeInfo, getEffectiveStatus } from "@/lib/utils";
 import type { Device, SensorReading } from "@/lib/types";
+import DeleteDeviceButton from "@/components/DeleteDeviceButton";
 
 export const dynamic = "force-dynamic";
 
@@ -57,15 +58,18 @@ function DeviceRow({ device }: { device: Device }) {
               </p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-gray-900">
-              {device.firmware_version || "Unknown"}
-            </p>
-            <p className="text-sm text-gray-500">
-              {device.last_seen_at
-                ? formatRelativeTime(device.last_seen_at)
-                : "Never"}
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className="text-sm text-gray-900">
+                {device.firmware_version || "Unknown"}
+              </p>
+              <p className="text-sm text-gray-500">
+                {device.last_seen_at
+                  ? formatRelativeTime(device.last_seen_at)
+                  : "Never"}
+              </p>
+            </div>
+            <DeleteDeviceButton deviceId={device.device_id} />
           </div>
         </div>
         <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">

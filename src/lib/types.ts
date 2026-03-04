@@ -87,6 +87,11 @@ export interface DeviceConfig {
   sensor_address: string;
   test_mode_enabled: boolean;
   debug_logging_enabled: boolean;
+  capture_now: boolean;
+  capture_schedule_type: number;
+  capture_schedule_value: number;
+  capture_window_start: number;
+  capture_window_end: number;
   config_version: number;
   created_at: string;
   updated_at: string;
