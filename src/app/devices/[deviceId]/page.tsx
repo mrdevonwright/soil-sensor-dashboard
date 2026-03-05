@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatRelativeTime, getStatusColor, getRssiQuality, getDeviceTypeInfo, getEffectiveStatus } from "@/lib/utils";
-import type { Device, SensorReading, CameraImage } from "@/lib/types";
+import type { Device, SensorReading, CameraImage, FirmwareVersion } from "@/lib/types";
 import { DepthProfileChart } from "@/components/charts/DepthProfileChart";
 import { TimeSeriesSection } from "@/components/charts/TimeSeriesSection";
 import { CameraGallery } from "@/components/CameraGallery";
@@ -79,6 +79,19 @@ async function getDeviceCaptureSchedule(deviceId: string) {
   };
 }
 
+async function getLatestFirmware(deviceType: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("firmware_versions")
+    .select("*")
+    .eq("device_type", deviceType)
+    .not("released_at", "is", null)
+    .order("version_code", { ascending: false })
+    .limit(1)
+    .single();
+  return data as FirmwareVersion | null;
+}
+
 async function getCameraImages(deviceId: string, hours: number = 24) {
   const supabase = await createClient();
   const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
@@ -108,13 +121,14 @@ export default async function DeviceDetailPage({ params }: Props) {
   const isCamera = device.device_type === "camera";
   const deviceTypeInfo = getDeviceTypeInfo(device.device_type);
 
-  // Fetch device-type-specific data
+  // Fetch device-type-specific data + latest firmware (in parallel)
   let latestReading: SensorReading | null = null;
   let history: SensorReading[] = [];
   let cameraImages: CameraImage[] = [];
   let cameraImageTotal = 0;
-
   let captureSchedule = { capture_schedule_type: 0, capture_schedule_value: 0, capture_window_start: 0, capture_window_end: 24 };
+
+  const latestFirmwarePromise = getLatestFirmware(device.device_type);
 
   if (isCamera) {
     const [result, schedule] = await Promise.all([
@@ -130,6 +144,9 @@ export default async function DeviceDetailPage({ params }: Props) {
       getReadingHistory(deviceId),
     ]);
   }
+
+  const latestFirmware = await latestFirmwarePromise;
+  const hasUpdate = latestFirmware && device.firmware_version !== latestFirmware.version;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -159,6 +176,29 @@ export default async function DeviceDetailPage({ params }: Props) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Firmware Update Banner */}
+        {hasUpdate && latestFirmware && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-amber-800">
+                Firmware update available: v{device.firmware_version || "?"} → v{latestFirmware.version}
+              </p>
+              {latestFirmware.release_notes && (
+                <p className="text-sm text-amber-600 mt-0.5">{latestFirmware.release_notes}</p>
+              )}
+              <p className="text-xs text-amber-500 mt-1">
+                Device will update on next wake cycle
+              </p>
+            </div>
+            <Link
+              href="/firmware"
+              className="text-sm font-medium text-amber-700 hover:text-amber-900 whitespace-nowrap ml-4"
+            >
+              View firmware →
+            </Link>
+          </div>
+        )}
+
         {/* Device Info */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">

@@ -63,6 +63,7 @@ export interface FirmwareVersion {
   id: string;
   version: string;
   version_code: number;
+  device_type: "soil_sensor" | "camera";
   firmware_url: string;
   firmware_size: number;
   firmware_checksum: string;
