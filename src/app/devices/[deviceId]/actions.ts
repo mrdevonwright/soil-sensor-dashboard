@@ -70,6 +70,36 @@ export async function updateCaptureSchedule(
   return { success: true };
 }
 
+export async function deleteCameraImage(imageId: string) {
+  const supabase = await createClient();
+
+  const { data: image, error: fetchError } = await supabase
+    .from("camera_images")
+    .select("storage_path, device_id")
+    .eq("id", imageId)
+    .single();
+
+  if (fetchError || !image) {
+    return { success: false, error: fetchError?.message ?? "Image not found" };
+  }
+
+  // Delete from Storage (continue even if this fails)
+  await supabase.storage.from("camera-images").remove([image.storage_path]);
+
+  // Delete DB record
+  const { error: dbError } = await supabase
+    .from("camera_images")
+    .delete()
+    .eq("id", imageId);
+
+  if (dbError) {
+    return { success: false, error: dbError.message };
+  }
+
+  revalidatePath(`/devices/${encodeURIComponent(image.device_id)}`);
+  return { success: true };
+}
+
 export async function triggerCaptureNow(deviceId: string) {
   const supabase = await createClient();
 

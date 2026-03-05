@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 import type { CameraImage } from "@/lib/types";
 import { formatDateTime } from "@/lib/utils";
+import { deleteCameraImage } from "@/app/devices/[deviceId]/actions";
+import { toast } from "sonner";
 
 function getCameraImageUrl(storagePath: string) {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/camera-images/${storagePath}`;
@@ -66,6 +68,23 @@ export function CameraGallery({ deviceId, initialImages, initialTotal }: CameraG
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
+
+  const [deleting, startDelete] = useTransition();
+
+  const handleDelete = (image: CameraImage) => {
+    if (!confirm("Delete this image? This cannot be undone.")) return;
+    startDelete(async () => {
+      const result = await deleteCameraImage(image.id);
+      if (result.success) {
+        toast.success("Image deleted");
+        setImages((prev) => prev.filter((i) => i.id !== image.id));
+        setTotal((prev) => prev - 1);
+        setSelectedImage(null);
+      } else {
+        toast.error(result.error ?? "Failed to delete image");
+      }
+    });
+  };
 
   return (
     <>
@@ -138,12 +157,21 @@ export function CameraGallery({ deviceId, initialImages, initialTotal }: CameraG
             className="relative max-w-5xl w-full max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute -top-10 right-0 text-white hover:text-gray-300 text-sm"
-            >
-              Close (Esc)
-            </button>
+            <div className="absolute -top-10 right-0 flex gap-4">
+              <button
+                onClick={() => handleDelete(selectedImage)}
+                disabled={deleting}
+                className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="text-white hover:text-gray-300 text-sm"
+              >
+                Close (Esc)
+              </button>
+            </div>
             <img
               src={getCameraImageUrl(selectedImage.storage_path)}
               alt={`Capture ${selectedImage.captured_at}`}
