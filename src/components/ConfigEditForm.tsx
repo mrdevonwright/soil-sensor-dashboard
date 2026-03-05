@@ -132,7 +132,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Collection Interval */}
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Collection Interval (minutes)
           </label>
           <input
@@ -147,7 +147,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* NTP Sync Interval */}
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             NTP Sync Interval (hours)
           </label>
           <input
@@ -162,7 +162,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Max Consecutive Failures */}
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Max Consecutive Failures
           </label>
           <input
@@ -177,7 +177,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Extended Sleep Minutes */}
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Extended Sleep (minutes)
           </label>
           <input
@@ -192,7 +192,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Sensor Address */}
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Sensor Address
           </label>
           <input
@@ -239,7 +239,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
           type="button"
           onClick={handleCancel}
           disabled={isPending}
-          className="px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
         >
           Cancel
         </button>
@@ -300,7 +300,7 @@ function CameraCaptureSection({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Schedule Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Capture Mode
             </label>
             <select
@@ -319,7 +319,7 @@ function CameraCaptureSection({
           {/* Interval input (type 2 only) */}
           {schedType === 2 && (
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Interval (minutes)
               </label>
               <input
@@ -336,7 +336,7 @@ function CameraCaptureSection({
           {/* Monthly day picker (type 4 only) */}
           {schedType === 4 && (
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Day of Month
               </label>
               <select
@@ -356,7 +356,7 @@ function CameraCaptureSection({
           {!isManualOnly && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Window Start (hour)
                 </label>
                 <select
@@ -370,7 +370,7 @@ function CameraCaptureSection({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Window End (hour)
                 </label>
                 <select
@@ -391,7 +391,7 @@ function CameraCaptureSection({
         {/* Weekly day picker (type 3) */}
         {schedType === 3 && (
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Days
             </label>
             <div className="flex gap-2">
@@ -413,7 +413,7 @@ function CameraCaptureSection({
                 );
               })}
             </div>
-            <p className="text-xs text-gray-900 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {DAYS_OF_WEEK.filter((_, i) => (schedValue >> i) & 1).join(", ") || "No days selected"}
             </p>
           </div>
@@ -421,17 +421,17 @@ function CameraCaptureSection({
 
         {/* Helper text */}
         {isManualOnly && (
-          <p className="text-sm text-gray-900">
+          <p className="text-sm text-gray-500">
             Camera will only capture when you click &quot;Capture on Next Wake&quot; on the device page.
           </p>
         )}
         {schedType === 3 && (
-          <p className="text-sm text-gray-900">
+          <p className="text-sm text-gray-500">
             Camera captures once on each selected day (within the time window if set).
           </p>
         )}
         {schedType === 4 && (
-          <p className="text-sm text-gray-900">
+          <p className="text-sm text-gray-500">
             Camera captures once on the selected day of each month (within the time window if set).
           </p>
         )}
@@ -443,8 +443,8 @@ function CameraCaptureSection({
 function ConfigValue({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
-      <p className="text-sm text-gray-900 font-medium">{label}</p>
-      <p className="text-xl font-semibold text-gray-900">{value}</p>
+      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{label}</p>
+      <p className="text-lg font-semibold text-gray-900 mt-1">{value}</p>
     </div>
   );
 }

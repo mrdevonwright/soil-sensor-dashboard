@@ -129,8 +129,8 @@ export function FirmwareUploadForm() {
           </div>
         ) : (
           <div>
-            <p className="text-gray-900">Drop .bin file here or click to browse</p>
-            <p className="text-xs text-gray-600 mt-1">Built with: pio run</p>
+            <p className="text-gray-500">Drop .bin file here or click to browse</p>
+            <p className="text-xs text-gray-400 mt-1">Built with: pio run</p>
           </div>
         )}
       </div>
@@ -138,7 +138,7 @@ export function FirmwareUploadForm() {
       {/* Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">Version</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Version</label>
           <input
             type="text"
             placeholder="1.2.1"
@@ -154,7 +154,7 @@ export function FirmwareUploadForm() {
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">Device Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
           <select
             value={deviceType}
             onChange={(e) => setDeviceType(e.target.value as "soil_sensor" | "camera")}
@@ -165,7 +165,7 @@ export function FirmwareUploadForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-1">Release Notes</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Release Notes</label>
           <input
             type="text"
             placeholder="Fix config sync, capture scheduling"
