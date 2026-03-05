@@ -100,6 +100,23 @@ export async function deleteCameraImage(imageId: string) {
   return { success: true };
 }
 
+export async function updateImageTransform(
+  deviceId: string,
+  transform: { image_rotation: number; image_mirror: boolean }
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("devices")
+    .update(transform)
+    .eq("device_id", deviceId);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath(`/devices/${encodeURIComponent(deviceId)}`);
+  return { success: true };
+}
+
 export async function triggerCaptureNow(deviceId: string) {
   const supabase = await createClient();
 

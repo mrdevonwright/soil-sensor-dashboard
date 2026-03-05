@@ -26,6 +26,9 @@ export interface Device {
   mesh_role: "gateway" | "relay" | "direct" | null;
   mesh_parent_device: string | null;
   mesh_hop_count: number | null;
+  // Display transforms for camera images
+  image_rotation: number | null;  // 0, 90, 180, 270
+  image_mirror: boolean | null;   // horizontal flip
 }
 
 export interface CameraImage {

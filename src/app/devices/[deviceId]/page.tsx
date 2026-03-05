@@ -9,6 +9,7 @@ import { CameraGallery } from "@/components/CameraGallery";
 import { CaptureNowButton } from "@/components/CaptureNowButton";
 import { CaptureScheduleEditor } from "@/components/CaptureScheduleEditor";
 import { DeviceTypeSelector } from "@/components/DeviceTypeSelector";
+import { ImageTransformControls } from "@/components/ImageTransformControls";
 
 export const dynamic = "force-dynamic";
 
@@ -281,7 +282,14 @@ export default async function DeviceDetailPage({ params }: Props) {
               <h2 className="text-lg font-semibold text-gray-900">
                 Camera Images
               </h2>
-              <CaptureNowButton deviceId={device.device_id} />
+              <div className="flex items-center gap-4">
+                <ImageTransformControls
+                  deviceId={device.device_id}
+                  initialRotation={device.image_rotation ?? 0}
+                  initialMirror={device.image_mirror ?? false}
+                />
+                <CaptureNowButton deviceId={device.device_id} />
+              </div>
             </div>
             <div className="mb-4">
               <CaptureScheduleEditor
@@ -296,6 +304,8 @@ export default async function DeviceDetailPage({ params }: Props) {
               deviceId={device.device_id}
               initialImages={cameraImages}
               initialTotal={cameraImageTotal}
+              imageRotation={device.image_rotation ?? 0}
+              imageMirror={device.image_mirror ?? false}
             />
           </div>
         ) : latestReading ? (
