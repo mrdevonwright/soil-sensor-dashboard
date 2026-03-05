@@ -53,7 +53,7 @@ function DeviceRow({ device }: { device: Device }) {
               <p className="font-medium text-gray-900">
                 {device.device_name || device.device_id}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-700">
                 {device.farm_id} / {device.block_id}
               </p>
             </div>
@@ -63,7 +63,7 @@ function DeviceRow({ device }: { device: Device }) {
               <p className="text-sm text-gray-900">
                 {device.firmware_version || "Unknown"}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-700">
                 {device.last_seen_at
                   ? formatRelativeTime(device.last_seen_at)
                   : "Never"}
@@ -72,7 +72,7 @@ function DeviceRow({ device }: { device: Device }) {
             <DeleteDeviceButton deviceId={device.device_id} />
           </div>
         </div>
-        <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
+        <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-700">
           {device.mesh_role && (
             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getMeshRoleInfo(device.mesh_role).color}`}>
               {getMeshRoleInfo(device.mesh_role).label}
@@ -82,7 +82,7 @@ function DeviceRow({ device }: { device: Device }) {
             </span>
           )}
           {device.mesh_role === "relay" && device.mesh_parent_device && (
-            <span className="text-gray-400">
+            <span className="text-gray-600">
               via {device.mesh_parent_device.slice(-8)}
             </span>
           )}
@@ -160,23 +160,23 @@ export default async function DashboardPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-xs font-medium text-gray-500">Total Devices</h3>
+            <h3 className="text-xs font-medium text-gray-700">Total Devices</h3>
             <p className="text-2xl font-bold text-gray-900">{devices.length}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-xs font-medium text-gray-500">Online</h3>
+            <h3 className="text-xs font-medium text-gray-700">Online</h3>
             <p className="text-2xl font-bold text-green-600">{onlineCount}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-xs font-medium text-gray-500">Soil Sensors</h3>
+            <h3 className="text-xs font-medium text-gray-700">Soil Sensors</h3>
             <p className="text-2xl font-bold text-cyan-600">{sensorDevices.length}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-xs font-medium text-gray-500">Cameras</h3>
+            <h3 className="text-xs font-medium text-gray-700">Cameras</h3>
             <p className="text-2xl font-bold text-purple-600">{cameraDevices.length}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-xs font-medium text-gray-500">Recent Readings</h3>
+            <h3 className="text-xs font-medium text-gray-700">Recent Readings</h3>
             <p className="text-2xl font-bold text-blue-600">{totalReadings}</p>
           </div>
         </div>
@@ -186,12 +186,12 @@ export default async function DashboardPage() {
           <div className="px-6 py-4 border-b">
             <h2 className="text-lg font-semibold text-gray-900">
               Soil Sensors
-              <span className="ml-2 text-sm font-normal text-gray-500">({sensorDevices.length})</span>
+              <span className="ml-2 text-sm font-normal text-gray-700">({sensorDevices.length})</span>
             </h2>
           </div>
 
           {sensorDevices.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
+            <div className="p-6 text-center text-gray-700">
               No soil sensors registered yet.
             </div>
           ) : (
@@ -208,12 +208,12 @@ export default async function DashboardPage() {
           <div className="px-6 py-4 border-b">
             <h2 className="text-lg font-semibold text-gray-900">
               Cameras
-              <span className="ml-2 text-sm font-normal text-gray-500">({cameraDevices.length})</span>
+              <span className="ml-2 text-sm font-normal text-gray-700">({cameraDevices.length})</span>
             </h2>
           </div>
 
           {cameraDevices.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
+            <div className="p-6 text-center text-gray-700">
               No cameras registered yet.
             </div>
           ) : (

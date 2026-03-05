@@ -413,7 +413,7 @@ function CameraCaptureSection({
                 );
               })}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-700 mt-1">
               {DAYS_OF_WEEK.filter((_, i) => (schedValue >> i) & 1).join(", ") || "No days selected"}
             </p>
           </div>
@@ -421,17 +421,17 @@ function CameraCaptureSection({
 
         {/* Helper text */}
         {isManualOnly && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Camera will only capture when you click &quot;Capture on Next Wake&quot; on the device page.
           </p>
         )}
         {schedType === 3 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Camera captures once on each selected day (within the time window if set).
           </p>
         )}
         {schedType === 4 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Camera captures once on the selected day of each month (within the time window if set).
           </p>
         )}

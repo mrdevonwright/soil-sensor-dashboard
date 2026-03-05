@@ -203,7 +203,7 @@ export default async function DeviceDetailPage({ params }: Props) {
         {/* Device Info */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Last Seen</h3>
+            <h3 className="text-sm font-medium text-gray-700">Last Seen</h3>
             <p className="text-xl font-semibold text-gray-900">
               {device.last_seen_at
                 ? formatRelativeTime(device.last_seen_at)
@@ -211,22 +211,22 @@ export default async function DeviceDetailPage({ params }: Props) {
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Firmware</h3>
+            <h3 className="text-sm font-medium text-gray-700">Firmware</h3>
             <p className="text-xl font-semibold text-gray-900">
               {device.firmware_version || "Unknown"}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">WiFi Signal</h3>
+            <h3 className="text-sm font-medium text-gray-700">WiFi Signal</h3>
             <p className="text-xl font-semibold text-gray-900">
               {device.wifi_rssi ? `${device.wifi_rssi} dBm` : "N/A"}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-700">
               {getRssiQuality(device.wifi_rssi)}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">
+            <h3 className="text-sm font-medium text-gray-700">
               {isCamera ? "Images Captured" : "Success Rate"}
             </h3>
             {isCamera ? (
@@ -244,7 +244,7 @@ export default async function DeviceDetailPage({ params }: Props) {
                       ).toFixed(1)}%`
                     : "N/A"}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-700">
                   {device.successful_uploads} / {device.successful_uploads + device.failed_uploads} uploads
                 </p>
               </>
@@ -257,19 +257,19 @@ export default async function DeviceDetailPage({ params }: Props) {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Location</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
-              <span className="text-gray-500">Farm ID:</span>
+              <span className="text-gray-700">Farm ID:</span>
               <p className="font-medium">{device.farm_id || "Not set"}</p>
             </div>
             <div>
-              <span className="text-gray-500">Block ID:</span>
+              <span className="text-gray-700">Block ID:</span>
               <p className="font-medium">{device.block_id || "Not set"}</p>
             </div>
             <div>
-              <span className="text-gray-500">Sub-Block ID:</span>
+              <span className="text-gray-700">Sub-Block ID:</span>
               <p className="font-medium">{device.sub_block_id || "Not set"}</p>
             </div>
             <div>
-              <span className="text-gray-500">Device ID:</span>
+              <span className="text-gray-700">Device ID:</span>
               <p className="font-medium font-mono text-xs">{device.device_id}</p>
             </div>
           </div>
@@ -351,7 +351,7 @@ export default async function DeviceDetailPage({ params }: Props) {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow p-6 mb-8 text-center text-gray-500">
+          <div className="bg-white rounded-lg shadow p-6 mb-8 text-center text-gray-700">
             No sensor readings available for this device yet.
           </div>
         )}

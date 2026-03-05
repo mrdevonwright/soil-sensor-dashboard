@@ -37,7 +37,7 @@ export function ImageTransformControls({
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="text-gray-500">Image:</span>
+      <span className="text-gray-700">Image:</span>
       <button
         onClick={() => save((rotation + 315) % 360, mirror)}
         className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-700"
@@ -65,7 +65,7 @@ export function ImageTransformControls({
         ⇔
       </button>
       {(rotation !== 0 || mirror) && (
-        <span className="text-xs text-gray-400">
+        <span className="text-xs text-gray-600">
           {rotation > 0 && `${rotation}°`}
           {rotation > 0 && mirror && " + "}
           {mirror && "mirrored"}

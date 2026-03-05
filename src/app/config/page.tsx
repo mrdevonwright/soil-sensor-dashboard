@@ -83,7 +83,7 @@ export default async function ConfigPage() {
           {globalConfig ? (
             <ConfigEditForm config={globalConfig} isGlobal />
           ) : (
-            <p className="text-gray-500">
+            <p className="text-gray-700">
               No global config found. Run the SQL migration to create one.
             </p>
           )}
@@ -114,7 +114,7 @@ export default async function ConfigPage() {
           </div>
 
           {deviceConfigs.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
+            <div className="p-6 text-center text-gray-700">
               <p>No device-specific configurations.</p>
               <p className="text-sm mt-2">
                 Device-specific configs will appear here when created.

@@ -129,8 +129,8 @@ export function FirmwareUploadForm() {
           </div>
         ) : (
           <div>
-            <p className="text-gray-500">Drop .bin file here or click to browse</p>
-            <p className="text-xs text-gray-400 mt-1">Built with: pio run</p>
+            <p className="text-gray-700">Drop .bin file here or click to browse</p>
+            <p className="text-xs text-gray-600 mt-1">Built with: pio run</p>
           </div>
         )}
       </div>
@@ -147,7 +147,7 @@ export function FirmwareUploadForm() {
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
           />
           {version && versionCode !== null && (
-            <p className="text-xs text-gray-400 mt-1">Code: {versionCode}</p>
+            <p className="text-xs text-gray-600 mt-1">Code: {versionCode}</p>
           )}
           {version && versionCode === null && (
             <p className="text-xs text-red-500 mt-1">Format: X.Y.Z</p>

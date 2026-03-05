@@ -236,7 +236,7 @@ export function CameraGallery({
             </button>
           ))}
           {loading && (
-            <span className="text-sm text-gray-400 ml-2">Loading...</span>
+            <span className="text-sm text-gray-600 ml-2">Loading...</span>
           )}
         </div>
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
@@ -301,15 +301,15 @@ export function CameraGallery({
       )}
 
       {images.length === 0 ? (
-        <div className="text-center text-gray-500 py-12">
+        <div className="text-center text-gray-700 py-12">
           No images for this time period.
         </div>
       ) : (
         <>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-700 mb-4">
             {total} image{total !== 1 ? "s" : ""}
             {viewMode === "list" && selectedIds.size === 0 && (
-              <span className="text-gray-400 ml-2">(Shift+click to range select)</span>
+              <span className="text-gray-600 ml-2">(Shift+click to range select)</span>
             )}
           </p>
 
@@ -381,7 +381,7 @@ export function CameraGallery({
                       <p className="text-sm font-medium text-gray-900">
                         {formatDateTime(image.captured_at)}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-700">
                         {formatFileSize(image.file_size_bytes)}
                         {image.width && image.height && ` \u00B7 ${image.width}\u00D7${image.height}`}
                       </p>

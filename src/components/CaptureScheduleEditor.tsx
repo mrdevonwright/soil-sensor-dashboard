@@ -87,10 +87,10 @@ export function CaptureScheduleEditor({
     return (
       <div className="flex items-center gap-4">
         <div className="text-sm">
-          <span className="text-gray-500">Schedule:</span>{" "}
+          <span className="text-gray-700">Schedule:</span>{" "}
           <span className="font-medium">{formatSchedule(initialScheduleType, initialScheduleValue)}</span>
           {initialScheduleType !== 0 && initialWindowEnd < 24 && (
-            <span className="text-gray-500 ml-2">
+            <span className="text-gray-700 ml-2">
               ({initialWindowStart.toString().padStart(2, "0")}:00-{initialWindowEnd.toString().padStart(2, "0")}:00)
             </span>
           )}
@@ -178,7 +178,7 @@ export function CaptureScheduleEditor({
               );
             })}
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 mt-1">
             {DAYS_OF_WEEK.filter((_, i) => (schedValue >> i) & 1).join(", ") || "No days selected"}
           </p>
         </div>
