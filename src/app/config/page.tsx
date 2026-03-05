@@ -69,7 +69,7 @@ export default async function ConfigPage() {
               <h2 className="text-lg font-semibold text-gray-900">
                 Global Default Configuration
               </h2>
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-gray-700 text-sm mt-1">
                 These settings apply to all devices unless overridden by a device-specific config.
               </p>
             </div>
@@ -108,7 +108,7 @@ export default async function ConfigPage() {
             <h2 className="text-lg font-semibold text-gray-900">
               Device-Specific Overrides
             </h2>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-gray-700 text-sm mt-1">
               Override global settings for specific devices.
             </p>
           </div>
@@ -129,7 +129,7 @@ export default async function ConfigPage() {
                       <p className="font-medium text-gray-900 font-mono text-lg">
                         {config.device_id}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-700">
                         Device-specific override
                       </p>
                     </div>

@@ -132,7 +132,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Collection Interval */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-900 mb-1">
             Collection Interval (minutes)
           </label>
           <input
@@ -147,7 +147,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* NTP Sync Interval */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-900 mb-1">
             NTP Sync Interval (hours)
           </label>
           <input
@@ -162,7 +162,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Max Consecutive Failures */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-900 mb-1">
             Max Consecutive Failures
           </label>
           <input
@@ -177,7 +177,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Extended Sleep Minutes */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-900 mb-1">
             Extended Sleep (minutes)
           </label>
           <input
@@ -192,7 +192,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
 
         {/* Sensor Address */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-900 mb-1">
             Sensor Address
           </label>
           <input
@@ -300,7 +300,7 @@ function CameraCaptureSection({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Schedule Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-900 mb-1">
               Capture Mode
             </label>
             <select
@@ -319,7 +319,7 @@ function CameraCaptureSection({
           {/* Interval input (type 2 only) */}
           {schedType === 2 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-900 mb-1">
                 Interval (minutes)
               </label>
               <input
@@ -336,7 +336,7 @@ function CameraCaptureSection({
           {/* Monthly day picker (type 4 only) */}
           {schedType === 4 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-900 mb-1">
                 Day of Month
               </label>
               <select
@@ -356,7 +356,7 @@ function CameraCaptureSection({
           {!isManualOnly && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-900 mb-1">
                   Window Start (hour)
                 </label>
                 <select
@@ -370,7 +370,7 @@ function CameraCaptureSection({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-900 mb-1">
                   Window End (hour)
                 </label>
                 <select
@@ -443,8 +443,8 @@ function CameraCaptureSection({
 function ConfigValue({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-xl font-semibold">{value}</p>
+      <p className="text-sm text-gray-700 font-medium">{label}</p>
+      <p className="text-xl font-semibold text-gray-900">{value}</p>
     </div>
   );
 }
@@ -463,7 +463,7 @@ function ToggleField({
         {...register}
         className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
       />
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <span className="text-sm font-medium text-gray-900">{label}</span>
     </label>
   );
 }
