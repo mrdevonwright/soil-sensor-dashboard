@@ -239,7 +239,7 @@ export function ConfigEditForm({ config, isGlobal = false }: ConfigEditFormProps
           type="button"
           onClick={handleCancel}
           disabled={isPending}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
         >
           Cancel
         </button>
@@ -391,7 +391,7 @@ function CameraCaptureSection({
         {/* Weekly day picker (type 3) */}
         {schedType === 3 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-900 mb-2">
               Days
             </label>
             <div className="flex gap-2">
@@ -413,7 +413,7 @@ function CameraCaptureSection({
                 );
               })}
             </div>
-            <p className="text-xs text-gray-700 mt-1">
+            <p className="text-xs text-gray-900 mt-1">
               {DAYS_OF_WEEK.filter((_, i) => (schedValue >> i) & 1).join(", ") || "No days selected"}
             </p>
           </div>
@@ -421,17 +421,17 @@ function CameraCaptureSection({
 
         {/* Helper text */}
         {isManualOnly && (
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-900">
             Camera will only capture when you click &quot;Capture on Next Wake&quot; on the device page.
           </p>
         )}
         {schedType === 3 && (
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-900">
             Camera captures once on each selected day (within the time window if set).
           </p>
         )}
         {schedType === 4 && (
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-900">
             Camera captures once on the selected day of each month (within the time window if set).
           </p>
         )}
@@ -443,7 +443,7 @@ function CameraCaptureSection({
 function ConfigValue({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
-      <p className="text-sm text-gray-700 font-medium">{label}</p>
+      <p className="text-sm text-gray-900 font-medium">{label}</p>
       <p className="text-xl font-semibold text-gray-900">{value}</p>
     </div>
   );

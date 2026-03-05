@@ -37,10 +37,10 @@ export function ImageTransformControls({
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="text-gray-700">Image:</span>
+      <span className="text-gray-900">Image:</span>
       <button
         onClick={() => save((rotation + 315) % 360, mirror)}
-        className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-700"
+        className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-900"
         title="Rotate left 45°"
         disabled={saving}
       >
@@ -48,7 +48,7 @@ export function ImageTransformControls({
       </button>
       <button
         onClick={() => save((rotation + 45) % 360, mirror)}
-        className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-700"
+        className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-900"
         title="Rotate right"
         disabled={saving}
       >
@@ -56,7 +56,7 @@ export function ImageTransformControls({
       </button>
       <button
         onClick={() => save(rotation, !mirror)}
-        className={`px-2 py-1 rounded text-gray-700 ${
+        className={`px-2 py-1 rounded text-gray-900 ${
           mirror ? "bg-purple-100 hover:bg-purple-200" : "bg-gray-100 hover:bg-gray-200"
         }`}
         title="Mirror horizontal"

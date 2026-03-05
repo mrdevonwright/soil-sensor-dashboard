@@ -69,7 +69,7 @@ export default async function ConfigPage() {
               <h2 className="text-lg font-semibold text-gray-900">
                 Global Default Configuration
               </h2>
-              <p className="text-gray-700 text-sm mt-1">
+              <p className="text-gray-900 text-sm mt-1">
                 These settings apply to all devices unless overridden by a device-specific config.
               </p>
             </div>
@@ -83,7 +83,7 @@ export default async function ConfigPage() {
           {globalConfig ? (
             <ConfigEditForm config={globalConfig} isGlobal />
           ) : (
-            <p className="text-gray-700">
+            <p className="text-gray-900">
               No global config found. Run the SQL migration to create one.
             </p>
           )}
@@ -108,13 +108,13 @@ export default async function ConfigPage() {
             <h2 className="text-lg font-semibold text-gray-900">
               Device-Specific Overrides
             </h2>
-            <p className="text-gray-700 text-sm mt-1">
+            <p className="text-gray-900 text-sm mt-1">
               Override global settings for specific devices.
             </p>
           </div>
 
           {deviceConfigs.length === 0 ? (
-            <div className="p-6 text-center text-gray-700">
+            <div className="p-6 text-center text-gray-900">
               <p>No device-specific configurations.</p>
               <p className="text-sm mt-2">
                 Device-specific configs will appear here when created.
@@ -129,7 +129,7 @@ export default async function ConfigPage() {
                       <p className="font-medium text-gray-900 font-mono text-lg">
                         {config.device_id}
                       </p>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-gray-900">
                         Device-specific override
                       </p>
                     </div>

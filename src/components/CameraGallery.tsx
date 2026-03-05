@@ -243,7 +243,7 @@ export function CameraGallery({
           <button
             onClick={() => setViewMode("grid")}
             className={`px-2.5 py-1 text-sm rounded-md transition-colors ${
-              viewMode === "grid" ? "bg-white shadow text-gray-900" : "text-gray-500 hover:text-gray-700"
+              viewMode === "grid" ? "bg-white shadow text-gray-900" : "text-gray-500 hover:text-gray-900"
             }`}
             title="Grid view"
           >
@@ -254,7 +254,7 @@ export function CameraGallery({
           <button
             onClick={() => setViewMode("list")}
             className={`px-2.5 py-1 text-sm rounded-md transition-colors ${
-              viewMode === "list" ? "bg-white shadow text-gray-900" : "text-gray-500 hover:text-gray-700"
+              viewMode === "list" ? "bg-white shadow text-gray-900" : "text-gray-500 hover:text-gray-900"
             }`}
             title="List view"
           >
@@ -286,7 +286,7 @@ export function CameraGallery({
           <div className="flex-1" />
           <button
             onClick={handleBulkDownload}
-            className="px-3 py-1.5 text-sm font-medium rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm font-medium rounded-md bg-white border border-gray-300 text-gray-900 hover:bg-gray-50"
           >
             Download ({selectedIds.size})
           </button>
@@ -301,12 +301,12 @@ export function CameraGallery({
       )}
 
       {images.length === 0 ? (
-        <div className="text-center text-gray-700 py-12">
+        <div className="text-center text-gray-900 py-12">
           No images for this time period.
         </div>
       ) : (
         <>
-          <p className="text-sm text-gray-700 mb-4">
+          <p className="text-sm text-gray-900 mb-4">
             {total} image{total !== 1 ? "s" : ""}
             {viewMode === "list" && selectedIds.size === 0 && (
               <span className="text-gray-600 ml-2">(Shift+click to range select)</span>
@@ -381,7 +381,7 @@ export function CameraGallery({
                       <p className="text-sm font-medium text-gray-900">
                         {formatDateTime(image.captured_at)}
                       </p>
-                      <p className="text-xs text-gray-700">
+                      <p className="text-xs text-gray-900">
                         {formatFileSize(image.file_size_bytes)}
                         {image.width && image.height && ` \u00B7 ${image.width}\u00D7${image.height}`}
                       </p>

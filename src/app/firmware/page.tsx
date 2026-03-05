@@ -85,7 +85,7 @@ export default async function FirmwarePage() {
           </div>
 
           {firmwareVersions.length === 0 ? (
-            <div className="p-6 text-center text-gray-700">
+            <div className="p-6 text-center text-gray-900">
               <p>No firmware versions uploaded yet.</p>
             </div>
           ) : (
@@ -113,7 +113,7 @@ export default async function FirmwarePage() {
                               </span>
                             )}
                           </p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-900">
                             Code: {fw.version_code} | Size: {(fw.firmware_size / 1024).toFixed(0)} KB
                           </p>
                         </div>
@@ -122,7 +122,7 @@ export default async function FirmwarePage() {
                         <p className="text-sm text-gray-900">
                           Rollout: {fw.rollout_percentage}%
                         </p>
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-gray-900">
                           {fw.released_at
                             ? `Released ${formatRelativeTime(fw.released_at)}`
                             : "Not released"}

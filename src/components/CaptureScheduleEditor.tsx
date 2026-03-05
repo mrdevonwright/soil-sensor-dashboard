@@ -87,17 +87,17 @@ export function CaptureScheduleEditor({
     return (
       <div className="flex items-center gap-4">
         <div className="text-sm">
-          <span className="text-gray-700">Schedule:</span>{" "}
-          <span className="font-medium">{formatSchedule(initialScheduleType, initialScheduleValue)}</span>
+          <span className="text-gray-900">Schedule:</span>{" "}
+          <span className="font-medium text-gray-900">{formatSchedule(initialScheduleType, initialScheduleValue)}</span>
           {initialScheduleType !== 0 && initialWindowEnd < 24 && (
-            <span className="text-gray-700 ml-2">
+            <span className="text-gray-900 ml-2">
               ({initialWindowStart.toString().padStart(2, "0")}:00-{initialWindowEnd.toString().padStart(2, "0")}:00)
             </span>
           )}
         </div>
         <button
           onClick={() => setIsEditing(true)}
-          className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          className="px-3 py-1 text-sm bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
         >
           Edit
         </button>
@@ -110,7 +110,7 @@ export function CaptureScheduleEditor({
       {/* Schedule Type */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Mode</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Mode</label>
           <select
             value={schedType}
             onChange={(e) => handleTypeChange(parseInt(e.target.value))}
@@ -126,7 +126,7 @@ export function CaptureScheduleEditor({
 
         {schedType === 2 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Interval (min)</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Interval (min)</label>
             <input
               type="number"
               value={schedValue}
@@ -140,7 +140,7 @@ export function CaptureScheduleEditor({
 
         {schedType === 4 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Day of Month</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Day of Month</label>
             <select
               value={schedValue}
               onChange={(e) => setSchedValue(parseInt(e.target.value))}
@@ -158,7 +158,7 @@ export function CaptureScheduleEditor({
       {/* Weekly day picker */}
       {schedType === 3 && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Days</label>
+          <label className="block text-sm font-medium text-gray-900 mb-2">Days</label>
           <div className="flex gap-2">
             {DAYS_OF_WEEK.map((day, i) => {
               const isActive = (schedValue >> i) & 1;
@@ -178,7 +178,7 @@ export function CaptureScheduleEditor({
               );
             })}
           </div>
-          <p className="text-xs text-gray-700 mt-1">
+          <p className="text-xs text-gray-900 mt-1">
             {DAYS_OF_WEEK.filter((_, i) => (schedValue >> i) & 1).join(", ") || "No days selected"}
           </p>
         </div>
@@ -188,7 +188,7 @@ export function CaptureScheduleEditor({
       {schedType !== 0 && (
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Window Start</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Window Start</label>
             <select
               value={winStart}
               onChange={(e) => setWinStart(parseInt(e.target.value))}
@@ -200,7 +200,7 @@ export function CaptureScheduleEditor({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Window End</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Window End</label>
             <select
               value={winEnd}
               onChange={(e) => setWinEnd(parseInt(e.target.value))}
@@ -227,7 +227,7 @@ export function CaptureScheduleEditor({
         <button
           onClick={handleCancel}
           disabled={isPending}
-          className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-gray-200 text-gray-900 text-sm rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
         >
           Cancel
         </button>
