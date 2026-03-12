@@ -147,29 +147,32 @@ export default async function DeviceDetailPage({ params }: Props) {
   }
 
   const latestFirmware = await latestFirmwarePromise;
-  const hasUpdate = latestFirmware && device.firmware_version !== latestFirmware.version;
+  const deviceVersionCode = device.firmware_version
+    ? device.firmware_version.split(".").reduce((acc: number, part: string, i: number) => acc + parseInt(part) * [10000, 100, 1][i], 0)
+    : 0;
+  const hasUpdate = latestFirmware && latestFirmware.version_code > deviceVersionCode;
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-gray-500 hover:text-gray-900"
-              >
-                &larr; Back
-              </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <Link
+              href="/"
+              className="text-gray-500 hover:text-gray-900 text-sm"
+            >
+              &larr; Back
+            </Link>
+            <div className="flex items-center gap-3 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                 {device.device_name || device.device_id}
               </h1>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${deviceTypeInfo.color}`}>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ${deviceTypeInfo.color}`}>
                 <DeviceTypeSelector deviceId={device.device_id} currentType={device.device_type} />
               </span>
               <div
-                className={`w-3 h-3 rounded-full ${getStatusColor(getEffectiveStatus(device.last_seen_at))}`}
+                className={`w-3 h-3 rounded-full shrink-0 ${getStatusColor(getEffectiveStatus(device.last_seen_at))}`}
               />
             </div>
           </div>
